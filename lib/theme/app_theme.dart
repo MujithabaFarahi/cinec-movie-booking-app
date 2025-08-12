@@ -6,6 +6,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
+      fontFamily: 'Outfit',
       colorScheme: ColorScheme.light(
         primary: AppColors.primary,
         onPrimary: AppColors.white,

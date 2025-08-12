@@ -1,4 +1,7 @@
 import 'package:cinec_movies/screens/layout_screen.dart';
+import 'package:cinec_movies/screens/sign_in_screen.dart';
+import 'package:cinec_movies/screens/sign_up_screen.dart';
+import 'package:cinec_movies/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
@@ -16,8 +19,14 @@ class AppRouter {
       case '/more':
         return _createRoute(const LayoutScreen(pageIndex: 3));
 
+      case '/login':
+        return _createRoute(const SignInScreen());
+
+      case '/register':
+        return _createRoute(const SignUpScreen());
+
       default:
-        return _createRoute(const LayoutScreen(pageIndex: 0));
+        return _createRoute(const SplashScreen());
     }
   }
 }

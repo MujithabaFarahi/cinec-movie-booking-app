@@ -1,6 +1,7 @@
 import 'package:cinec_movies/theme/app_colors.dart';
 import 'package:cinec_movies/widgets/image_icon_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String text;
@@ -13,6 +14,7 @@ class PrimaryButton extends StatelessWidget {
   final Color foregroundColor;
   final String fontFamily;
   final String? icon;
+  final String? svgIconPath;
   final FontWeight fontWeight;
   final double fontSize;
   final bool isLoading;
@@ -28,6 +30,7 @@ class PrimaryButton extends StatelessWidget {
     this.borderColor = Colors.transparent,
     this.foregroundColor = Colors.white,
     this.fontFamily = 'Outfit',
+    this.svgIconPath,
     this.icon,
     this.fontWeight = FontWeight.w600,
     this.fontSize = 14,
@@ -50,8 +53,8 @@ class PrimaryButton extends StatelessWidget {
         child: InkWell(
           onTap: isLoading ? null : onPressed,
           borderRadius: BorderRadius.circular(borderRadius),
-          splashColor: AppColors.alizarin300,
-          highlightColor: AppColors.alizarin200,
+          splashColor: backgroundColor.withAlpha(10),
+          highlightColor: backgroundColor.withAlpha(10),
           child: isLoading
               ? Center(
                   child: SizedBox(
@@ -68,7 +71,10 @@ class PrimaryButton extends StatelessWidget {
                   children: [
                     if (icon != null)
                       ImageIconBuilder(isOriginal: true, image: icon!),
-                    if (icon != null) const SizedBox(width: 8),
+                    if (svgIconPath != null)
+                      SvgPicture.asset(svgIconPath!, height: 20),
+                    if (icon != null || svgIconPath != null)
+                      const SizedBox(width: 8),
                     Text(
                       text,
                       style: TextStyle(

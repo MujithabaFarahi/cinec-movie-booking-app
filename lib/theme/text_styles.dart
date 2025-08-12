@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextStyles {
-  static const String fontFamily = 'Onest';
+  static const String fontFamily = 'Outfit';
 
   static TextTheme get textTheme => const TextTheme(
     displayLarge: TextStyle(

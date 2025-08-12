@@ -12,7 +12,20 @@
           "package_name": "com.example.cinec_movies"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1061970085110-kqp38t5p74bqp6d4sr0hf5k6nle4creu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cinec_movies",
+            "certificate_hash": "8f2a34507a6e192cc34820f78184943efbfd2a50"
+          }
+        },
+        {
+          "client_id": "1061970085110-gj0kvt0ecs80ef1fdgb6hlpgld9mfq2s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBGGzJZeA6fRjnOdWANPvSLGXeHBC7RNxM"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1061970085110-gj0kvt0ecs80ef1fdgb6hlpgld9mfq2s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1061970085110-o8agtdddsmauge3bp3nrh658fnoh9gu6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cinecMovies"
+              }
+            }
+          ]
         }
       }
     }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Primary and Accent Colors
-  static const Color primary = Color(0xFFCC2222); // Alizarin 500
+  static const Color primary = Color(0xFF06378C); // blue 500
   static const Color accent = Color(0xFF2E3142); // Gunmetal 800
 
   // Tonal Variations of Alizarin
@@ -41,17 +41,31 @@ class AppColors {
   static const Color gray800 = Color(0xFF5C5C5C);
   static const Color gray900 = Color(0xFF474747);
 
+  static const Color peach50 = Color(0xFFFDF3F3);
+  static const Color peach100 = Color(0xFFFCE4E5);
+  static const Color peach200 = Color(0xFFFACECF);
+  static const Color peach300 = Color(0xFFF7B3B5);
+  static const Color peach400 = Color(0xFFEF7A7D);
+  static const Color peach500 = Color(0xFFE35054);
+
+  static const Color purple50 = Color(0xFFFBF6FF);
+  static const Color purple100 = Color(0xFFF6E9FE);
+  static const Color purple200 = Color(0xFFEED7FD);
+  static const Color purple300 = Color(0xFFCD8AF6);
+  static const Color purple400 = Color(0xFFA73CE1);
+  static const Color purple500 = Color(0xFF7928A1);
+
   // Semantic Colors - Info (Blue, from image, row 3)
-  static const Color info50 = Color(0xFFC9E2F9);
-  static const Color info100 = Color(0xFFC9E2F9);
-  static const Color info200 = Color(0xFF96C2F3);
-  static const Color info300 = Color(0xFF5D95DC);
-  static const Color info400 = Color(0xFF346ABA);
-  static const Color info500 = Color(0xFF06378C); // Primary
-  static const Color info600 = Color(0xFF042A78);
-  static const Color info700 = Color(0xFF031F64);
-  static const Color info800 = Color(0xFF011651);
-  static const Color info900 = Color(0xFF010F43);
+  static const Color blue50 = Color(0xFFC9E2F9);
+  static const Color blue100 = Color(0xFFC9E2F9);
+  static const Color blue200 = Color(0xFF96C2F3);
+  static const Color blue300 = Color(0xFF5D95DC);
+  static const Color blue400 = Color(0xFF346ABA);
+  static const Color blue500 = Color(0xFF06378C); // Primary
+  static const Color blue600 = Color(0xFF042A78);
+  static const Color blue700 = Color(0xFF031F64);
+  static const Color blue800 = Color(0xFF011651);
+  static const Color blue900 = Color(0xFF010F43);
 
   // Semantic Colors - Warning (Yellow, from image, row 4)
   static const Color warning50 = Color(0xFFFFEDE6);
