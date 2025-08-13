@@ -1,4 +1,4 @@
-import 'package:cinec_movies/blocs/auth/auth_bloc.dart';
+import 'package:cinec_movies/blocs/movie/movie_bloc.dart';
 import 'package:cinec_movies/firebase_options.dart';
 import 'package:cinec_movies/routes.dart';
 import 'package:cinec_movies/screens/splash_screen.dart';
@@ -39,7 +39,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => AuthBloc(widget.databaseMethods)),
+        BlocProvider(create: (context) => MovieBloc(widget.databaseMethods)),
       ],
       child: ToastificationWrapper(
         child: MaterialApp(

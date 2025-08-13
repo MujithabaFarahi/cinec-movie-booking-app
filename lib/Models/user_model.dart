@@ -1,13 +1,12 @@
-class User {
+class UserModel {
   final String id;
   final String name;
   final String email;
   final String role;
-
   final DateTime createdAt;
   final DateTime lastLogin;
 
-  User({
+  UserModel({
     required this.id,
     required this.name,
     required this.email,
@@ -16,9 +15,9 @@ class User {
     required this.lastLogin,
   });
 
-  /// Factory constructor to create a User from Firestore data
-  factory User.fromFirestore(Map<String, dynamic> data) {
-    return User(
+  /// Factory constructor to create a UserModel from Firestore data
+  factory UserModel.fromFirestore(Map<String, dynamic> data) {
+    return UserModel(
       id: data['id'] ?? '',
       name: data['name'] ?? '',
       email: data['email'] ?? '',
@@ -32,9 +31,9 @@ class User {
     );
   }
 
-  /// Creates a User from a Map
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
+  /// Creates a UserModel from a Map
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       email: map['email'] ?? '',
@@ -48,7 +47,7 @@ class User {
     );
   }
 
-  /// Converts a User object to a Map
+  /// Converts a UserModel object to a Map
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -60,8 +59,8 @@ class User {
     };
   }
 
-  /// Returns a new User with updated fields
-  User copyWith({
+  /// Returns a new UserModel with updated fields
+  UserModel copyWith({
     String? id,
     String? name,
     String? email,
@@ -71,7 +70,7 @@ class User {
     DateTime? createdAt,
     DateTime? lastLogin,
   }) {
-    return User(
+    return UserModel(
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,

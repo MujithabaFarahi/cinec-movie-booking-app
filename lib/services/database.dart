@@ -17,25 +17,28 @@ class DatabaseMethods {
     return querySnapshot.docs.isEmpty;
   }
 
-  Stream<QuerySnapshot> getAllItems() {
+  Stream<QuerySnapshot> getAllMovies() {
     return FirebaseFirestore.instance
-        .collection("Bags")
-        .orderBy('name')
+        .collection("movies")
         .snapshots(includeMetadataChanges: true);
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getItemById(String id) {
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getMovieById(String id) {
     return FirebaseFirestore.instance
-        .collection("Bags")
+        .collection("movies")
         .doc(id)
         .snapshots(includeMetadataChanges: true);
   }
 
-  Stream<QuerySnapshot> getItemsByGarment(String garment) {
+  Stream<QuerySnapshot> getShowtimesByMovieId(String movieId) {
+    final now = DateTime.now();
+
     return FirebaseFirestore.instance
-        .collection("Bags")
-        .where("garment", isEqualTo: garment)
-        .orderBy("createdAt", descending: true)
+        .collection("movies")
+        .doc(movieId)
+        .collection("showtimes")
+        .where('dateTime', isGreaterThan: Timestamp.fromDate(now))
+        .orderBy("dateTime")
         .snapshots(includeMetadataChanges: true);
   }
 
@@ -69,13 +72,13 @@ class DatabaseMethods {
 
   Stream<QuerySnapshot> getAllUsers() {
     return FirebaseFirestore.instance
-        .collection("Users")
+        .collection("users")
         .snapshots(includeMetadataChanges: true);
   }
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> getUserById(String id) {
     return FirebaseFirestore.instance
-        .collection("Users")
+        .collection("users")
         .doc(id)
         .snapshots(includeMetadataChanges: true);
   }

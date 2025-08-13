@@ -1,3 +1,4 @@
+import 'package:cinec_movies/blocs/movie/movie_bloc.dart';
 import 'package:cinec_movies/theme/app_colors.dart';
 import 'package:cinec_movies/theme/theme_extension.dart';
 import 'package:cinec_movies/utils/core_utils.dart';
@@ -9,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -27,9 +29,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _mobileController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool isLoading = false;
+  bool isGoogleLoading = false;
 
   Future<void> _registerWithEmailPassword() async {
     try {
+      setState(() {
+        isLoading = true;
+      });
+
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
@@ -45,16 +53,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
       });
 
       await _navigateToHome(userCredential.user!);
+    } on FirebaseAuthException catch (e) {
+      CoreUtils.toastError(e.code, title: 'Login Failed');
     } catch (e) {
-      print(e);
       CoreUtils.toastError("Registration failed: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   Future<void> _loginWithGoogle() async {
     try {
-      final GoogleSignInAccount googleUser = await GoogleSignIn.instance
-          .authenticate();
+      setState(() {
+        isGoogleLoading = true;
+      });
+      final googleSignIn = GoogleSignIn.instance;
+      await googleSignIn.initialize(
+        serverClientId:
+            '1061970085110-gj0kvt0ecs80ef1fdgb6hlpgld9mfq2s.apps.googleusercontent.com',
+      );
+
+      final GoogleSignInAccount googleUser = await googleSignIn.authenticate();
 
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
 
@@ -67,8 +88,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
 
       await _navigateToHome(userCredential.user!);
+    } on FirebaseAuthException catch (e) {
+      CoreUtils.toastError(e.code, title: 'Login Failed');
+    } on GoogleSignInException catch (e) {
+      CoreUtils.toastError(
+        e.description ?? 'Unknown error',
+        title: 'Google Sign-In failed',
+      );
     } catch (e) {
-      CoreUtils.toastError("Google Sign-In failed: $e");
+      CoreUtils.toastError(" ${e.toString()}", title: 'Google Sign-In failed');
+    } finally {
+      setState(() {
+        isGoogleLoading = false;
+      });
     }
   }
 
@@ -90,6 +122,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     if (mounted) {
+      final movieBloc = BlocProvider.of<MovieBloc>(context);
+      movieBloc.add(GetUserById(user.uid));
+
       Navigator.pushReplacementNamed(context, '/home');
     }
   }

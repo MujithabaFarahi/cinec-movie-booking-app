@@ -1,39 +1,65 @@
+import 'package:cinec_movies/blocs/movie/movie_bloc.dart';
 import 'package:cinec_movies/widgets/appbar.dart';
-import 'package:cinec_movies/widgets/primary_button.dart';
-import 'package:cinec_movies/widgets/primary_textfield.dart';
+import 'package:cinec_movies/widgets/movie_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    final movieBloc = BlocProvider.of<MovieBloc>(context);
+    movieBloc.add(GetAllMovies());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Home Screen'),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              const Text('Welcome to the Home Screen!'),
-              Wrap(
-                runSpacing: 10,
-                children: [
-                  TextField(),
-                  ElevatedButton(onPressed: () {}, child: const Text('Submit')),
-                ],
+      body: BlocBuilder<MovieBloc, MovieState>(
+        builder: (context, state) {
+          if (state.isLoading && state.movies.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state.isError && !state.isLoading) {
+            return Center(child: Text('Error: ${state.message}'));
+          } else if (state.movies.isEmpty && !state.isLoading) {
+            return const Center(child: Text('No movies currently showing.'));
+          } else {
+            final movies = state.movies;
+
+            return GridView.builder(
+              padding: const EdgeInsets.all(8),
+              itemCount: movies.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // 2 per row
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
+                childAspectRatio: 0.65, // poster-like ratio
               ),
-              const SizedBox(height: 20),
-              Wrap(
-                runSpacing: 10,
-                children: [
-                  PrimaryTextfield(hintText: 'Type here...', labelText: 'Name'),
-                  PrimaryButton(text: 'Submit', onPressed: () {}),
-                ],
-              ),
-            ],
-          ),
-        ),
+              itemBuilder: (context, index) {
+                final movie = movies[index];
+                return MovieCard(
+                  movie: movie,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/movie',
+                      arguments: {'movie': movie},
+                    );
+                  },
+                );
+              },
+            );
+          }
+        },
       ),
     );
   }

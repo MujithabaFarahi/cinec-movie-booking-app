@@ -1,4 +1,5 @@
 import 'package:cinec_movies/screens/layout_screen.dart';
+import 'package:cinec_movies/screens/movie_view_screen.dart';
 import 'package:cinec_movies/screens/sign_in_screen.dart';
 import 'package:cinec_movies/screens/sign_up_screen.dart';
 import 'package:cinec_movies/screens/splash_screen.dart';
@@ -10,14 +11,15 @@ class AppRouter {
       case '/home':
         return _createRoute(const LayoutScreen(pageIndex: 0));
 
-      case '/item':
+      case '/bookings':
         return _createRoute(const LayoutScreen(pageIndex: 1));
 
-      case '/add':
+      case '/profile':
         return _createRoute(const LayoutScreen(pageIndex: 2));
 
-      case '/more':
-        return _createRoute(const LayoutScreen(pageIndex: 3));
+      case '/movie':
+        final args = routeSettings.arguments as Map<String, dynamic>?;
+        return _createRoute(MovieViewScreen(movie: args?['movie']));
 
       case '/login':
         return _createRoute(const SignInScreen());

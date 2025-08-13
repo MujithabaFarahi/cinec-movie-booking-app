@@ -1,7 +1,6 @@
-import 'package:cinec_movies/screens/add_order.dart';
+import 'package:cinec_movies/screens/bookings_screen.dart';
 import 'package:cinec_movies/screens/home_screen.dart';
-import 'package:cinec_movies/screens/more_screen.dart';
-import 'package:cinec_movies/screens/view_items.dart';
+import 'package:cinec_movies/screens/profile_screen.dart';
 import 'package:cinec_movies/theme/app_colors.dart';
 import 'package:cinec_movies/widgets/image_icon_builder.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +43,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(), // Disable swipe gesture
-        children: const [HomeScreen(), ViewItems(), AddOrder(), MoreScreen()],
+        children: const [HomeScreen(), BookingsScreen(), ProfileScreen()],
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -66,33 +65,21 @@ class _LayoutScreenState extends State<LayoutScreen> {
             BottomNavigationBarItem(
               icon: _selectedIndex == 1
                   ? const ImageIconBuilder(
-                      image: 'assets/icons/bag.png',
+                      image: 'assets/icons/booking_fill.png',
                       isSelected: true,
                     )
-                  : const ImageIconBuilder(
-                      image: 'assets/icons/bag-outline.png',
-                    ),
-              label: 'Bags',
+                  : const ImageIconBuilder(image: 'assets/icons/booking.png'),
+              label: 'Bookings',
             ),
+
             BottomNavigationBarItem(
               icon: _selectedIndex == 2
                   ? const ImageIconBuilder(
-                      image: 'assets/icons/add.png',
+                      image: 'assets/icons/user_fill.png',
                       isSelected: true,
                     )
-                  : const ImageIconBuilder(
-                      image: 'assets/icons/add-outline.png',
-                    ),
-              label: 'Add Order',
-            ),
-            BottomNavigationBarItem(
-              icon: _selectedIndex == 3
-                  ? const ImageIconBuilder(
-                      image: 'assets/icons/more-outline.png',
-                      isSelected: true,
-                    )
-                  : const ImageIconBuilder(image: 'assets/icons/more.png'),
-              label: 'more',
+                  : const ImageIconBuilder(image: 'assets/icons/user.png'),
+              label: 'Profile',
             ),
           ],
           currentIndex: _selectedIndex,

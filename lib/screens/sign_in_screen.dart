@@ -1,3 +1,4 @@
+import 'package:cinec_movies/blocs/movie/movie_bloc.dart';
 import 'package:cinec_movies/theme/app_colors.dart';
 import 'package:cinec_movies/theme/theme_extension.dart';
 import 'package:cinec_movies/utils/core_utils.dart';
@@ -9,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -25,9 +27,14 @@ class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool isLoading = false;
+  bool isGoogleLoading = false;
 
   Future<void> _loginWithEmailPassword() async {
     try {
+      setState(() {
+        isLoading = true;
+      });
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
@@ -37,11 +44,18 @@ class _SignInScreenState extends State<SignInScreen> {
       CoreUtils.toastError(e.code, title: 'Login Failed');
     } catch (e) {
       CoreUtils.toastError(" $e", title: 'Login failed');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
   Future<void> _loginWithGoogle() async {
     try {
+      setState(() {
+        isGoogleLoading = true;
+      });
       final googleSignIn = GoogleSignIn.instance;
       await googleSignIn.initialize(
         serverClientId:
@@ -70,6 +84,10 @@ class _SignInScreenState extends State<SignInScreen> {
       );
     } catch (e) {
       CoreUtils.toastError(" ${e.toString()}", title: 'Google Sign-In failed');
+    } finally {
+      setState(() {
+        isGoogleLoading = false;
+      });
     }
   }
 
@@ -91,6 +109,9 @@ class _SignInScreenState extends State<SignInScreen> {
     }
 
     if (mounted) {
+      final movieBloc = BlocProvider.of<MovieBloc>(context);
+      movieBloc.add(GetUserById(user.uid));
+
       Navigator.pushReplacementNamed(context, '/home');
     }
   }
@@ -159,6 +180,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           const Gap(32),
                           PrimaryButton(
+                            isLoading: isLoading,
                             text: 'Log In',
                             onPressed: () {
                               if (_formKey.currentState?.validate() ?? false) {
@@ -200,6 +222,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             runSpacing: 16,
                             children: [
                               PrimaryButton(
+                                isLoading: isGoogleLoading,
                                 text: 'Continue with Google',
                                 onPressed: () {
                                   _loginWithGoogle();
