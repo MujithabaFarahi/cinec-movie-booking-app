@@ -14,10 +14,30 @@ final class GetUserById extends MovieEvent {
 }
 
 final class GetAllMovies extends MovieEvent {
-  const GetAllMovies();
+  final bool isAdmin;
+  const GetAllMovies({this.isAdmin = false});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [isAdmin];
+}
+
+final class GetMovieById extends MovieEvent {
+  final String id;
+
+  const GetMovieById(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}
+
+final class UpdateMovieStatusById extends MovieEvent {
+  final String id;
+  final bool nowShowing;
+
+  const UpdateMovieStatusById(this.id, this.nowShowing);
+
+  @override
+  List<Object?> get props => [id, nowShowing];
 }
 
 final class GetShowtimesByMovieId extends MovieEvent {
@@ -27,4 +47,13 @@ final class GetShowtimesByMovieId extends MovieEvent {
 
   @override
   List<Object?> get props => [movieId];
+}
+
+final class GetShowTimeById extends MovieEvent {
+  final String id;
+
+  const GetShowTimeById(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }

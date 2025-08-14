@@ -1,5 +1,6 @@
 import 'package:cinec_movies/screens/layout_screen.dart';
 import 'package:cinec_movies/screens/movie_view_screen.dart';
+import 'package:cinec_movies/screens/seat_selection_screen.dart';
 import 'package:cinec_movies/screens/sign_in_screen.dart';
 import 'package:cinec_movies/screens/sign_up_screen.dart';
 import 'package:cinec_movies/screens/splash_screen.dart';
@@ -20,6 +21,15 @@ class AppRouter {
       case '/movie':
         final args = routeSettings.arguments as Map<String, dynamic>?;
         return _createRoute(MovieViewScreen(movie: args?['movie']));
+
+      case '/seat-selection':
+        final args = routeSettings.arguments as Map<String, dynamic>?;
+        return _createRoute(
+          SeatSelectionScreen(
+            showTimeId: args?['showTimeId'],
+            ticketCount: args?['ticketCount'],
+          ),
+        );
 
       case '/login':
         return _createRoute(const SignInScreen());

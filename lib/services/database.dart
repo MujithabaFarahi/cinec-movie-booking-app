@@ -17,17 +17,18 @@ class DatabaseMethods {
     return querySnapshot.docs.isEmpty;
   }
 
-  Stream<QuerySnapshot> getAllMovies() {
-    return FirebaseFirestore.instance
-        .collection("movies")
-        .snapshots(includeMetadataChanges: true);
+  Stream<QuerySnapshot> getAllMovies({required bool isAdmin}) {
+    final collection = FirebaseFirestore.instance.collection("movies");
+
+    if (isAdmin) {
+      return collection.snapshots();
+    } else {
+      return collection.where('nowShowing', isEqualTo: true).snapshots();
+    }
   }
 
   Stream<DocumentSnapshot<Map<String, dynamic>>> getMovieById(String id) {
-    return FirebaseFirestore.instance
-        .collection("movies")
-        .doc(id)
-        .snapshots(includeMetadataChanges: true);
+    return FirebaseFirestore.instance.collection("movies").doc(id).snapshots();
   }
 
   Stream<QuerySnapshot> getShowtimesByMovieId(String movieId) {
@@ -39,7 +40,13 @@ class DatabaseMethods {
         .collection("showtimes")
         .where('dateTime', isGreaterThan: Timestamp.fromDate(now))
         .orderBy("dateTime")
-        .snapshots(includeMetadataChanges: true);
+        .snapshots();
+  }
+
+  Future<void> updateMovieStatusById(String id, bool nowShowing) async {
+    return await FirebaseFirestore.instance.collection("movies").doc(id).update(
+      {'nowShowing': nowShowing},
+    );
   }
 
   Future updateItem(Map<String, dynamic> updatedData, String id) async {
@@ -56,31 +63,8 @@ class DatabaseMethods {
         .set(orderInfoMap);
   }
 
-  Stream<QuerySnapshot> getAllOrders() {
-    return FirebaseFirestore.instance
-        .collection("Orders")
-        .orderBy("createdAt", descending: true)
-        .snapshots(includeMetadataChanges: true);
-  }
-
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getOrderById(String id) {
-    return FirebaseFirestore.instance
-        .collection("Orders")
-        .doc(id)
-        .snapshots(includeMetadataChanges: true);
-  }
-
-  Stream<QuerySnapshot> getAllUsers() {
-    return FirebaseFirestore.instance
-        .collection("users")
-        .snapshots(includeMetadataChanges: true);
-  }
-
   Stream<DocumentSnapshot<Map<String, dynamic>>> getUserById(String id) {
-    return FirebaseFirestore.instance
-        .collection("users")
-        .doc(id)
-        .snapshots(includeMetadataChanges: true);
+    return FirebaseFirestore.instance.collection("users").doc(id).snapshots();
   }
 
   Future addReturn(Map<String, dynamic> returnInfoMap, String id) async {
@@ -88,33 +72,5 @@ class DatabaseMethods {
         .collection("Orders")
         .doc(id)
         .set(returnInfoMap);
-  }
-
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getReturnById(String id) {
-    return FirebaseFirestore.instance
-        .collection("Returns")
-        .doc(id)
-        .snapshots(includeMetadataChanges: true);
-  }
-
-  Stream<QuerySnapshot> getAllReturns() {
-    return FirebaseFirestore.instance
-        .collection("Returns")
-        .orderBy("createdAt", descending: true)
-        .snapshots(includeMetadataChanges: true);
-  }
-
-  Stream<QuerySnapshot> getAllBuyings() {
-    return FirebaseFirestore.instance
-        .collection("Buyings")
-        .orderBy("createdAt", descending: true)
-        .snapshots(includeMetadataChanges: true);
-  }
-
-  Stream<DocumentSnapshot<Map<String, dynamic>>> getBuyingById(String id) {
-    return FirebaseFirestore.instance
-        .collection("Buyings")
-        .doc(id)
-        .snapshots(includeMetadataChanges: true);
   }
 }

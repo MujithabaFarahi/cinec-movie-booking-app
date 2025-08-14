@@ -14,7 +14,10 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
   MovieBloc(this.databaseMethods) : super(const MovieState()) {
     on<GetUserById>(_onGetUserById);
     on<GetAllMovies>(_onGetAllMovies);
+    on<GetMovieById>(_onGetMovieById);
+    on<UpdateMovieStatusById>(_onUpdateMovieStatusById);
     on<GetShowtimesByMovieId>(_onGetShowtimesByMovieId);
+    on<GetShowTimeById>(_onGetShowTimeById);
   }
 
   Future<void> _onGetUserById(
@@ -26,11 +29,19 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     try {
       final query = databaseMethods.getUserById(event.id);
 
+      bool isAdmin = false;
+
       await for (final documentSnapshot in query) {
         final data = documentSnapshot.data();
-        final user = UserModel.fromFirestore(data!);
+        final user = UserModel.fromFirestore(data!, documentSnapshot.id);
 
-        emit(state.copyWith(isLoading: false, user: user));
+        if (user.email == 'admin@gmail.com') {
+          isAdmin = true;
+        }
+
+        add(GetAllMovies(isAdmin: isAdmin));
+
+        emit(state.copyWith(isLoading: false, user: user, isAdmin: isAdmin));
       }
     } catch (e) {
       emit(
@@ -46,7 +57,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     emit(state.copyWith(isLoading: true));
 
     try {
-      final query = databaseMethods.getAllMovies();
+      final query = databaseMethods.getAllMovies(isAdmin: state.isAdmin);
 
       await for (final querySnapshot in query) {
         final movies = querySnapshot.docs.map((doc) {
@@ -59,6 +70,41 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     } catch (e) {
       emit(
         state.copyWith(isLoading: false, isError: true, message: e.toString()),
+      );
+    }
+  }
+
+  Future<void> _onGetMovieById(
+    GetMovieById event,
+    Emitter<MovieState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true, movie: null));
+
+    try {
+      final movie = state.movies.firstWhere((m) => m.id == event.id);
+
+      emit(state.copyWith(isLoading: false, movie: movie));
+    } catch (e) {
+      emit(
+        state.copyWith(isLoading: false, isError: true, message: e.toString()),
+      );
+    }
+  }
+
+  Future<void> _onUpdateMovieStatusById(
+    UpdateMovieStatusById event,
+    Emitter<MovieState> emit,
+  ) async {
+    emit(state.copyWith(isLoading2: true));
+
+    try {
+      await databaseMethods.updateMovieStatusById(event.id, event.nowShowing);
+      final movie = state.movies.firstWhere((m) => m.id == event.id);
+
+      emit(state.copyWith(isLoading2: false, movie: movie));
+    } catch (e) {
+      emit(
+        state.copyWith(isLoading2: false, isError: true, message: e.toString()),
       );
     }
   }
@@ -80,6 +126,23 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
         emit(state.copyWith(isLoading: false, showtimes: showtimes));
       }
+    } catch (e) {
+      emit(
+        state.copyWith(isLoading: false, isError: true, message: e.toString()),
+      );
+    }
+  }
+
+  Future<void> _onGetShowTimeById(
+    GetShowTimeById event,
+    Emitter<MovieState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true, showtime: null));
+
+    try {
+      final showtime = state.showtimes.firstWhere((s) => s.id == event.id);
+
+      emit(state.copyWith(isLoading: false, showtime: showtime));
     } catch (e) {
       emit(
         state.copyWith(isLoading: false, isError: true, message: e.toString()),

@@ -1,4 +1,5 @@
 import 'package:cinec_movies/blocs/movie/movie_bloc.dart';
+import 'package:cinec_movies/theme/media_query_extension.dart';
 import 'package:cinec_movies/widgets/appbar.dart';
 import 'package:cinec_movies/widgets/movie_card.dart';
 import 'package:flutter/material.dart';
@@ -36,13 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
             final movies = state.movies;
 
             return GridView.builder(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               itemCount: movies.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 per row
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: (context.screenWidth / 200).floor(),
                 mainAxisSpacing: 8,
                 crossAxisSpacing: 8,
-                childAspectRatio: 0.65, // poster-like ratio
+                childAspectRatio: 0.65,
               ),
               itemBuilder: (context, index) {
                 final movie = movies[index];

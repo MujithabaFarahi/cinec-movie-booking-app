@@ -3,8 +3,7 @@ class BookingModel {
   final String movieId;
   final String movieTitle;
   final String posterUrl;
-  final String date;
-  final String time;
+  final DateTime showDateTime;
   final List<String> seats;
   final DateTime bookedAt;
 
@@ -13,8 +12,7 @@ class BookingModel {
     required this.movieId,
     required this.movieTitle,
     required this.posterUrl,
-    required this.date,
-    required this.time,
+    required this.showDateTime,
     required this.seats,
     required this.bookedAt,
   });
@@ -25,8 +23,8 @@ class BookingModel {
       movieId: data['movieId'] ?? '',
       movieTitle: data['movieTitle'] ?? '',
       posterUrl: data['posterUrl'] ?? '',
-      date: data['showtime']?['date'] ?? '',
-      time: data['showtime']?['time'] ?? '',
+      showDateTime:
+          DateTime.tryParse(data['showDateTime'] ?? '') ?? DateTime.now(),
       seats: List<String>.from(data['seats'] ?? []),
       bookedAt: DateTime.tryParse(data['bookedAt'] ?? '') ?? DateTime.now(),
     );
@@ -34,10 +32,11 @@ class BookingModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'movieId': movieId,
       'movieTitle': movieTitle,
       'posterUrl': posterUrl,
-      'showtime': {'date': date, 'time': time},
+      'showDateTime': showDateTime.toIso8601String(),
       'seats': seats,
       'bookedAt': bookedAt.toIso8601String(),
     };

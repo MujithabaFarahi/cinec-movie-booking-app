@@ -34,6 +34,7 @@ class MovieModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'title': title,
       'genre': genre,
       'duration': duration,

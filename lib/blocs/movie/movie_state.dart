@@ -2,45 +2,61 @@ part of 'movie_bloc.dart';
 
 class MovieState extends Equatable {
   final bool isLoading;
-  final bool isGoogleLoading;
+  final bool isLoading2;
   final bool isError;
   final bool isSuccess;
+  final bool isAdmin;
   final String? message;
   final UserModel? user;
   final List<MovieModel> movies;
+  final MovieModel? movie;
   final List<ShowtimeModel> showtimes;
+  final ShowtimeModel? showtime;
+  final double? defaultTicketPrice;
 
   const MovieState({
     this.isLoading = false,
-    this.isGoogleLoading = false,
+    this.isLoading2 = false,
     this.isError = false,
     this.isSuccess = false,
+    this.isAdmin = false,
     this.message,
     this.user,
     this.movies = const [],
+    this.movie,
     this.showtimes = const [],
+    this.showtime,
+    this.defaultTicketPrice = 400,
   });
 
   MovieState copyWith({
     bool? isLoading,
-    bool? isGoogleLoading,
+    bool? isLoading2,
     bool? isError,
     bool? isSuccess,
+    bool? isAdmin,
     String? message,
     UserModel? user,
     List<UserModel>? users,
     List<MovieModel>? movies,
+    MovieModel? movie,
     List<ShowtimeModel>? showtimes,
+    ShowtimeModel? showtime,
+    double? defaultTicketPrice,
   }) {
     return MovieState(
       isLoading: isLoading ?? this.isLoading,
-      isGoogleLoading: isGoogleLoading ?? this.isGoogleLoading,
+      isLoading2: isLoading2 ?? this.isLoading2,
       isError: isError ?? this.isError,
       isSuccess: isSuccess ?? this.isSuccess,
+      isAdmin: isAdmin ?? this.isAdmin,
       message: message ?? this.message,
       user: user ?? this.user,
       movies: movies ?? this.movies,
+      movie: movie ?? this.movie,
       showtimes: showtimes ?? this.showtimes,
+      showtime: showtime ?? this.showtime,
+      defaultTicketPrice: defaultTicketPrice ?? this.defaultTicketPrice,
     );
   }
 
@@ -48,11 +64,15 @@ class MovieState extends Equatable {
   List<Object?> get props => [
     message,
     isLoading,
-    isGoogleLoading,
+    isLoading2,
     isError,
     isSuccess,
+    isAdmin,
     user,
     movies,
+    movie,
     showtimes,
+    showtime,
+    defaultTicketPrice,
   ];
 }
