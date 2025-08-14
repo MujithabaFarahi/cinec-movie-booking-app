@@ -74,7 +74,14 @@ class PrimaryButton extends StatelessWidget {
                     if (icon != null)
                       ImageIconBuilder(isOriginal: true, image: icon!),
                     if (svgIconPath != null)
-                      SvgPicture.asset(svgIconPath!, height: 20),
+                      SvgPicture.asset(
+                        svgIconPath!,
+                        height: 20,
+                        colorFilter: ColorFilter.mode(
+                          foregroundColor,
+                          BlendMode.srcIn,
+                        ),
+                      ),
                     if (icon != null || svgIconPath != null)
                       const SizedBox(width: 8),
                     Text(

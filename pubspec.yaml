@@ -27,6 +27,7 @@ dependencies:
   flutter_native_splash: ^2.4.6
   image_picker: ^1.1.2
   firebase_storage: ^13.0.0
+  skeletonizer: ^2.1.0+1
 
 dev_dependencies:
   flutter_test:

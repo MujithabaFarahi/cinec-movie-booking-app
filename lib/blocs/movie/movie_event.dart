@@ -65,3 +65,19 @@ final class GetAllBookings extends MovieEvent {
   @override
   List<Object?> get props => [];
 }
+
+final class SearchMovies extends MovieEvent {
+  final String query;
+
+  const SearchMovies(this.query);
+
+  @override
+  List<Object?> get props => [query];
+}
+
+final class ResetState extends MovieEvent {
+  const ResetState();
+
+  @override
+  List<Object?> get props => [];
+}

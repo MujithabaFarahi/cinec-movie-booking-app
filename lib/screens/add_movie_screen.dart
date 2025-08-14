@@ -38,7 +38,7 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
   @override
   void initState() {
     final movieBloc = BlocProvider.of<MovieBloc>(context);
-    movie = movieBloc.state.movie!;
+    movie = movieBloc.state.movie;
     if (widget.isEditMode && movie != null) {
       _titleController.text = movie!.title;
       _genreController.text = movie!.genre;
@@ -62,7 +62,7 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
     final fileId =
         '${_titleController.text.trim()}_${DateTime.now().millisecondsSinceEpoch}';
     final storageRef = FirebaseStorage.instance.ref().child(
-      'movie_posters/$fileId.jpg',
+      'MoviePosters/$fileId.jpg',
     );
 
     await storageRef.putFile(imageFile);

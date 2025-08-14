@@ -1,4 +1,5 @@
 import 'package:cinec_movies/Models/movie_model.dart';
+import 'package:cinec_movies/Models/showtime_model.dart';
 import 'package:cinec_movies/blocs/movie/movie_bloc.dart';
 import 'package:cinec_movies/widgets/appbar.dart';
 import 'package:cinec_movies/widgets/cached_image.dart';
@@ -135,7 +136,25 @@ class _MovieViewScreenState extends State<MovieViewScreen> {
             BlocBuilder<MovieBloc, MovieState>(
               builder: (context, state) {
                 if (state.isLoading && state.showtimes.isEmpty) {
-                  return Center(child: CircularProgressIndicator());
+                  final showtimes = List.generate(
+                    6,
+                    (index) => ShowtimeModel(
+                      id: '${index + 1}',
+                      dateTime: DateTime.now(),
+                      bookedSeats: [],
+                      ticketPrice: 400,
+                    ),
+                  );
+
+                  return Wrap(
+                    runSpacing: 6,
+                    children: showtimes.map((showtime) {
+                      return ShowtimeWidget(
+                        isLoading: true,
+                        dateTime: showtime.dateTime,
+                      );
+                    }).toList(),
+                  );
                 } else if (state.isError && !state.isLoading) {
                   return Text('Error loading showtimes: ${state.message}');
                 } else if (state.showtimes.isEmpty) {
@@ -149,7 +168,8 @@ class _MovieViewScreenState extends State<MovieViewScreen> {
                 } else {
                   final showtimes = state.showtimes;
 
-                  return Column(
+                  return Wrap(
+                    runSpacing: 6,
                     children: showtimes.map((showtime) {
                       return ShowtimeWidget(
                         dateTime: showtime.dateTime,

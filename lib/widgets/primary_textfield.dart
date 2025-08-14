@@ -131,7 +131,13 @@ class _PrimaryTextfieldState extends State<PrimaryTextfield> {
           suffixIcon: widget.svgIconPath != null
               ? IconButton(
                   onPressed: widget.onIconPressed,
-                  icon: SvgPicture.asset(widget.svgIconPath!),
+                  icon: SvgPicture.asset(
+                    widget.svgIconPath!,
+                    colorFilter: ColorFilter.mode(
+                      AppColors.primary,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 )
               : widget.obscureText
               ? IconButton(
@@ -140,6 +146,7 @@ class _PrimaryTextfieldState extends State<PrimaryTextfield> {
                     _showHide
                         ? 'assets/icons/eye.svg'
                         : 'assets/icons/eye_closed.svg',
+                    color: AppColors.primary,
                   ),
                 )
               : null,

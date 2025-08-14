@@ -8,6 +8,7 @@ class MovieState extends Equatable {
   final bool isAdmin;
   final String? message;
   final UserModel? user;
+  final List<MovieModel> allMovies;
   final List<MovieModel> movies;
   final MovieModel? movie;
   final List<ShowtimeModel> showtimes;
@@ -24,6 +25,7 @@ class MovieState extends Equatable {
     this.isAdmin = false,
     this.message,
     this.user,
+    this.allMovies = const [],
     this.movies = const [],
     this.movie,
     this.showtimes = const [],
@@ -32,6 +34,26 @@ class MovieState extends Equatable {
     this.bookings = const [],
     this.booking,
   });
+
+  factory MovieState.initial() {
+    return const MovieState(
+      isLoading: false,
+      isLoading2: false,
+      isError: false,
+      isSuccess: false,
+      isAdmin: false,
+      message: null,
+      user: null,
+      allMovies: [],
+      movies: [],
+      movie: null,
+      showtimes: [],
+      showtime: null,
+      defaultTicketPrice: 400,
+      bookings: [],
+      booking: null,
+    );
+  }
 
   MovieState copyWith({
     bool? isLoading,
@@ -42,6 +64,7 @@ class MovieState extends Equatable {
     String? message,
     UserModel? user,
     List<UserModel>? users,
+    List<MovieModel>? allMovies,
     List<MovieModel>? movies,
     MovieModel? movie,
     List<ShowtimeModel>? showtimes,
@@ -58,6 +81,7 @@ class MovieState extends Equatable {
       isAdmin: isAdmin ?? this.isAdmin,
       message: message ?? this.message,
       user: user ?? this.user,
+      allMovies: allMovies ?? this.allMovies,
       movies: movies ?? this.movies,
       movie: movie ?? this.movie,
       showtimes: showtimes ?? this.showtimes,

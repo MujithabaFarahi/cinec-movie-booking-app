@@ -20,6 +20,8 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     on<GetShowtimesByMovieId>(_onGetShowtimesByMovieId);
     on<GetShowTimeById>(_onGetShowTimeById);
     on<GetAllBookings>(_onGetAllBookings);
+    on<ResetState>(_onResetState);
+    on<SearchMovies>(_onSearchMovies);
   }
 
   Future<void> _onGetUserById(
@@ -67,7 +69,9 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
           return MovieModel.fromFirestore(data, doc.id);
         }).toList();
 
-        emit(state.copyWith(isLoading: false, movies: movies));
+        emit(
+          state.copyWith(isLoading: false, movies: movies, allMovies: movies),
+        );
       }
     } catch (e) {
       emit(
@@ -120,7 +124,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     GetShowtimesByMovieId event,
     Emitter<MovieState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(isLoading: true, showtimes: []));
 
     try {
       final query = databaseMethods.getShowtimesByMovieId(event.movieId);
@@ -188,6 +192,31 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
         emit(state.copyWith(isLoading: false, bookings: bookings));
       }
+    } catch (e) {
+      emit(
+        state.copyWith(isLoading: false, isError: true, message: e.toString()),
+      );
+    }
+  }
+
+  Future<void> _onResetState(ResetState event, Emitter<MovieState> emit) async {
+    emit(MovieState.initial());
+  }
+
+  Future<void> _onSearchMovies(
+    SearchMovies event,
+    Emitter<MovieState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      final movies = state.allMovies;
+
+      final filteredMovies = movies.where((movie) {
+        return movie.title.toLowerCase().contains(event.query.toLowerCase());
+      }).toList();
+
+      emit(state.copyWith(isLoading: false, movies: filteredMovies));
     } catch (e) {
       emit(
         state.copyWith(isLoading: false, isError: true, message: e.toString()),

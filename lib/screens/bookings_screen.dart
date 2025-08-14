@@ -1,3 +1,4 @@
+import 'package:cinec_movies/Models/booking_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/movie/movie_bloc.dart';
@@ -27,7 +28,24 @@ class _BookingsScreenState extends State<BookingsScreen> {
         child: BlocBuilder<MovieBloc, MovieState>(
           builder: (context, state) {
             if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return ListView.separated(
+                itemCount: 4,
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final booking = BookingModel(
+                    id: 'id',
+                    movieId: 'movieId',
+                    userId: 'userId',
+                    showTimeId: 'showTimeId',
+                    movieTitle: 'movieTitle',
+                    posterUrl: 'posterUrl',
+                    showDateTime: DateTime.now(),
+                    seats: ['A1', 'A2'],
+                    bookedAt: DateTime.now(),
+                  );
+                  return BookingCard(booking: booking, isLoading: true);
+                },
+              );
             }
 
             if (state.bookings.isEmpty) {
