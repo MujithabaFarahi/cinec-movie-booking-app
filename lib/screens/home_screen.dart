@@ -2,6 +2,7 @@ import 'package:cinec_movies/blocs/movie/movie_bloc.dart';
 import 'package:cinec_movies/theme/media_query_extension.dart';
 import 'package:cinec_movies/widgets/appbar.dart';
 import 'package:cinec_movies/widgets/movie_card.dart';
+import 'package:cinec_movies/widgets/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     final movieBloc = BlocProvider.of<MovieBloc>(context);
+
     movieBloc.add(GetAllMovies());
   }
 
@@ -37,12 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
             final movies = state.movies;
 
             return GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               itemCount: movies.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: (context.screenWidth / 200).floor(),
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
+                crossAxisCount: (context.screenWidth / 150).floor(),
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
                 childAspectRatio: 0.65,
               ),
               itemBuilder: (context, index) {
@@ -60,6 +62,27 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             );
           }
+        },
+      ),
+      bottomNavigationBar: BlocBuilder<MovieBloc, MovieState>(
+        builder: (context, state) {
+          if (state.isAdmin) {
+            return Padding(
+              padding: const EdgeInsets.only(
+                left: 20.0,
+                right: 20.0,
+                top: 20.0,
+              ),
+              child: PrimaryButton(
+                text: 'Add Movie',
+                height: 40,
+                onPressed: () {
+                  Navigator.pushNamed(context, '/add-movie');
+                },
+              ),
+            );
+          }
+          return const SizedBox.shrink();
         },
       ),
     );

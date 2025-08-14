@@ -1,6 +1,8 @@
 class BookingModel {
   final String id;
   final String movieId;
+  final String userId;
+  final String showTimeId;
   final String movieTitle;
   final String posterUrl;
   final DateTime showDateTime;
@@ -10,6 +12,8 @@ class BookingModel {
   BookingModel({
     required this.id,
     required this.movieId,
+    required this.userId,
+    required this.showTimeId,
     required this.movieTitle,
     required this.posterUrl,
     required this.showDateTime,
@@ -21,6 +25,8 @@ class BookingModel {
     return BookingModel(
       id: docId,
       movieId: data['movieId'] ?? '',
+      userId: data['userId'] ?? '',
+      showTimeId: data['showTimeId'] ?? '',
       movieTitle: data['movieTitle'] ?? '',
       posterUrl: data['posterUrl'] ?? '',
       showDateTime:
@@ -34,6 +40,8 @@ class BookingModel {
     return {
       'id': id,
       'movieId': movieId,
+      'userId': userId,
+      'showTimeId': showTimeId,
       'movieTitle': movieTitle,
       'posterUrl': posterUrl,
       'showDateTime': showDateTime.toIso8601String(),

@@ -1,3 +1,6 @@
+import 'package:cinec_movies/screens/add_movie_screen.dart';
+import 'package:cinec_movies/screens/add_showtime_screen.dart';
+import 'package:cinec_movies/screens/edit_profile_screen.dart';
 import 'package:cinec_movies/screens/layout_screen.dart';
 import 'package:cinec_movies/screens/movie_view_screen.dart';
 import 'package:cinec_movies/screens/seat_selection_screen.dart';
@@ -22,12 +25,28 @@ class AppRouter {
         final args = routeSettings.arguments as Map<String, dynamic>?;
         return _createRoute(MovieViewScreen(movie: args?['movie']));
 
+      case '/edit-profile':
+        final args = routeSettings.arguments as Map<String, dynamic>?;
+        return _createRoute(EditProfileScreen(user: args?['user']));
+
+      case '/add-showtime':
+        final args = routeSettings.arguments as Map<String, dynamic>?;
+        return _createRoute(AddShowtimeScreen(movieId: args?['movieId']));
+
+      case '/add-movie':
+        final args = routeSettings.arguments as Map<String, dynamic>?;
+        return _createRoute(
+          AddMovieScreen(isEditMode: args?['isEditMode'] ?? false),
+        );
+
       case '/seat-selection':
         final args = routeSettings.arguments as Map<String, dynamic>?;
         return _createRoute(
           SeatSelectionScreen(
             showTimeId: args?['showTimeId'],
+            movieId: args?['movieId'],
             ticketCount: args?['ticketCount'],
+            ticketPrice: args?['ticketPrice'],
           ),
         );
 

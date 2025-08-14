@@ -6,14 +6,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBackButton;
   final VoidCallback? onBackPressed;
-  final VoidCallback? onMorePressed;
+  final VoidCallback? onIconPressed;
+  final String icon;
 
   const CustomAppBar({
     super.key,
     this.title = '',
     this.showBackButton = false,
     this.onBackPressed,
-    this.onMorePressed,
+    this.onIconPressed,
+    this.icon = 'assets/icons/edit.svg',
   });
 
   @override
@@ -40,10 +42,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             )
           : null,
       actions: <Widget>[
-        onMorePressed != null
+        onIconPressed != null
             ? IconButton(
-                icon: SvgPicture.asset('assets/icons/ellipsis.svg'),
-                onPressed: onMorePressed,
+                icon: SvgPicture.asset(
+                  icon,
+                  colorFilter: ColorFilter.mode(
+                    AppColors.black,
+                    BlendMode.srcIn,
+                  ),
+                ),
+                onPressed: onIconPressed,
               )
             : const SizedBox.shrink(),
       ],

@@ -1,7 +1,9 @@
+import 'package:cinec_movies/blocs/movie/movie_bloc.dart';
 import 'package:cinec_movies/theme/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -45,6 +47,8 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     if (mounted) {
+      final movieBloc = BlocProvider.of<MovieBloc>(context);
+      movieBloc.add(GetUserById(user.uid));
       Navigator.pushReplacementNamed(context, '/home');
     }
   }

@@ -43,6 +43,18 @@ class DatabaseMethods {
         .snapshots();
   }
 
+  Stream<DocumentSnapshot<Map<String, dynamic>>> getShowtimeByMovieAndId(
+    String movieId,
+    String showtimeId,
+  ) {
+    return FirebaseFirestore.instance
+        .collection("movies")
+        .doc(movieId)
+        .collection("showtimes")
+        .doc(showtimeId)
+        .snapshots();
+  }
+
   Future<void> updateMovieStatusById(String id, bool nowShowing) async {
     return await FirebaseFirestore.instance.collection("movies").doc(id).update(
       {'nowShowing': nowShowing},
@@ -56,21 +68,20 @@ class DatabaseMethods {
         .update(updatedData);
   }
 
-  Future addOrder(Map<String, dynamic> orderInfoMap, String id) async {
-    return await FirebaseFirestore.instance
-        .collection("Orders")
-        .doc(id)
-        .set(orderInfoMap);
-  }
-
   Stream<DocumentSnapshot<Map<String, dynamic>>> getUserById(String id) {
     return FirebaseFirestore.instance.collection("users").doc(id).snapshots();
   }
 
-  Future addReturn(Map<String, dynamic> returnInfoMap, String id) async {
-    return await FirebaseFirestore.instance
-        .collection("Orders")
-        .doc(id)
-        .set(returnInfoMap);
+  Stream<QuerySnapshot> getAllBookings({
+    required bool isAdmin,
+    required String userId,
+  }) {
+    final collection = FirebaseFirestore.instance.collection("bookings");
+
+    if (isAdmin) {
+      return collection.snapshots();
+    } else {
+      return collection.where('userId', isEqualTo: userId).snapshots();
+    }
   }
 }

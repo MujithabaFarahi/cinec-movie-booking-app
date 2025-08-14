@@ -126,7 +126,7 @@ class AppTheme {
       datePickerTheme: DatePickerThemeData(
         backgroundColor: AppColors.white,
         todayForegroundColor: WidgetStateProperty.all(AppColors.primary),
-        todayBackgroundColor: WidgetStateProperty.all(AppColors.alizarin100),
+        todayBackgroundColor: WidgetStateProperty.all(AppColors.blue200),
 
         dayForegroundColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
@@ -140,13 +140,13 @@ class AppTheme {
           if (states.contains(WidgetState.selected)) {
             return AppColors.primary;
           } else if (states.contains(WidgetState.hovered)) {
-            return AppColors.alizarin100;
+            return AppColors.blue100;
           }
           return Colors.transparent;
         }),
         dayOverlayColor: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.pressed)) {
-            return AppColors.alizarin200;
+            return AppColors.blue200;
           }
           return null;
         }),

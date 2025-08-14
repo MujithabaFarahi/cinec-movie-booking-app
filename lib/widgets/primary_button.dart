@@ -18,6 +18,7 @@ class PrimaryButton extends StatelessWidget {
   final FontWeight fontWeight;
   final double fontSize;
   final bool isLoading;
+  final bool disabled;
 
   const PrimaryButton({
     super.key,
@@ -35,6 +36,7 @@ class PrimaryButton extends StatelessWidget {
     this.fontWeight = FontWeight.w600,
     this.fontSize = 14,
     this.isLoading = false,
+    this.disabled = false,
   });
 
   @override
@@ -43,7 +45,7 @@ class PrimaryButton extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: disabled ? Colors.grey : backgroundColor,
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(color: borderColor),
       ),
@@ -51,7 +53,7 @@ class PrimaryButton extends StatelessWidget {
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(borderRadius),
         child: InkWell(
-          onTap: isLoading ? null : onPressed,
+          onTap: isLoading || disabled ? null : onPressed,
           borderRadius: BorderRadius.circular(borderRadius),
           splashColor: backgroundColor.withAlpha(10),
           highlightColor: backgroundColor.withAlpha(10),

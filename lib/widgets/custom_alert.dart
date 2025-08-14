@@ -83,7 +83,6 @@ class CustomAlert extends StatelessWidget {
                   PrimaryButton(
                     onPressed: () {
                       onConfirm();
-                      Navigator.of(context).pop();
                     },
                     text: confirmText,
                     height: 42,

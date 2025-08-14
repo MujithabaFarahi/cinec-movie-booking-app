@@ -2,6 +2,7 @@ import 'package:cinec_movies/Models/movie_model.dart';
 import 'package:cinec_movies/blocs/movie/movie_bloc.dart';
 import 'package:cinec_movies/widgets/appbar.dart';
 import 'package:cinec_movies/widgets/cached_image.dart';
+import 'package:cinec_movies/widgets/custom_switch.dart';
 import 'package:cinec_movies/widgets/primary_button.dart';
 import 'package:cinec_movies/widgets/showtime_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +18,14 @@ class MovieViewScreen extends StatefulWidget {
 }
 
 class _MovieViewScreenState extends State<MovieViewScreen> {
+  bool isAdmin = false;
+
   @override
   void initState() {
     super.initState();
 
     final movieBloc = BlocProvider.of<MovieBloc>(context);
+    isAdmin = movieBloc.state.isAdmin;
     movieBloc.add(GetMovieById(widget.movie.id));
     movieBloc.add(GetShowtimesByMovieId(widget.movie.id));
   }
@@ -29,9 +33,21 @@ class _MovieViewScreenState extends State<MovieViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: widget.movie.title, showBackButton: true),
+      appBar: CustomAppBar(
+        title: widget.movie.title,
+        showBackButton: true,
+        onIconPressed: isAdmin
+            ? () {
+                Navigator.pushNamed(
+                  context,
+                  '/add-movie',
+                  arguments: {'isEditMode': true},
+                );
+              }
+            : null,
+      ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -53,19 +69,47 @@ class _MovieViewScreenState extends State<MovieViewScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AspectRatio(
-                        aspectRatio: 4 / 3,
-                        child: CachedImage(url: movie.posterUrl),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: AspectRatio(
+                          aspectRatio: 4 / 3,
+                          child: CachedImage(url: movie.posterUrl),
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      Text(
-                        movie.title,
-                        style: Theme.of(context).textTheme.headlineSmall,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                movie.title,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.headlineSmall,
+                              ),
+                              Text(
+                                '${movie.genre} • ${movie.duration} min',
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                            ],
+                          ),
+                          state.isAdmin
+                              ? CustomSwitchButton(
+                                  value: movie.nowShowing,
+                                  onChanged: (value) {
+                                    final movieBloc =
+                                        BlocProvider.of<MovieBloc>(context);
+                                    movieBloc.add(
+                                      UpdateMovieStatusById(movie.id, value),
+                                    );
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                        ],
                       ),
-                      Text(
-                        '${movie.genre} • ${movie.duration} min',
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
+
                       const SizedBox(height: 16),
                       Text(
                         movie.synopsis,
@@ -95,7 +139,13 @@ class _MovieViewScreenState extends State<MovieViewScreen> {
                 } else if (state.isError && !state.isLoading) {
                   return Text('Error loading showtimes: ${state.message}');
                 } else if (state.showtimes.isEmpty) {
-                  return const Text('No showtimes available.');
+                  return Center(
+                    child: Column(
+                      children: [
+                        const Text('No shows available at the moment.'),
+                      ],
+                    ),
+                  );
                 } else {
                   final showtimes = state.showtimes;
 
@@ -109,6 +159,7 @@ class _MovieViewScreenState extends State<MovieViewScreen> {
                             showtime.id,
                             400,
                             80 - showtime.bookedSeats.length,
+                            widget.movie.id,
                           );
                         },
                       );
@@ -120,6 +171,27 @@ class _MovieViewScreenState extends State<MovieViewScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: BlocBuilder<MovieBloc, MovieState>(
+        builder: (context, state) {
+          if (state.isAdmin) {
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: PrimaryButton(
+                text: 'Add ShowTime',
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    '/add-showtime',
+                    arguments: {'movieId': widget.movie.id},
+                  );
+                },
+              ),
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
+      ),
     );
   }
 }
@@ -129,6 +201,7 @@ void _showTicketCountDialog(
   String showTimeId,
   double price,
   int max,
+  String movieId,
 ) {
   int ticketCount = 1;
 
@@ -200,7 +273,9 @@ void _showTicketCountDialog(
                       '/seat-selection',
                       arguments: {
                         'showTimeId': showTimeId,
+                        'movieId': movieId,
                         'ticketCount': ticketCount,
+                        'ticketPrice': price,
                       },
                     );
                   },

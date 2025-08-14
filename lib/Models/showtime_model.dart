@@ -4,7 +4,8 @@ class ShowtimeModel {
   final String id;
   final DateTime dateTime;
   final List<String> bookedSeats;
-  final double ticketPrice;
+  final double ticketPrice; // new field
+
   ShowtimeModel({
     required this.id,
     required this.dateTime,
@@ -17,7 +18,8 @@ class ShowtimeModel {
       id: docId,
       dateTime: (data['dateTime'] as Timestamp).toDate(),
       bookedSeats: List<String>.from(data['bookedSeats'] ?? []),
-      ticketPrice: (data['ticketPrice'] ?? 0).toDouble(),
+      ticketPrice: (data['ticketPrice'] ?? 0)
+          .toDouble(), // default to 0 if missing
     );
   }
 

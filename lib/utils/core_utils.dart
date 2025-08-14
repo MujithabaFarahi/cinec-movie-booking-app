@@ -3,8 +3,10 @@ import 'package:cinec_movies/theme/theme_extension.dart';
 import 'package:cinec_movies/widgets/svg_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:toastification/toastification.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:intl/intl.dart';
 
 final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<ScaffoldMessengerState> rootScaffoldMessengerKey =
@@ -34,6 +36,11 @@ abstract class CoreUtils {
     if (!await launchUrl(launchUri)) {
       // showToast(type: ToastType.error, message: "Failed to open email client");
     }
+  }
+
+  static String formatDate(DateTime date) {
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    return formatter.format(date);
   }
 
   // static void heroDialog(Widget child) {
@@ -66,6 +73,25 @@ abstract class CoreUtils {
       },
     );
     return picked;
+  }
+
+  static void pickImageFromGallery(
+    ImagePicker picker,
+    Function(List<XFile>) onImagesPicked,
+  ) async {
+    try {
+      final XFile? pickedFile = await picker.pickImage(
+        source: ImageSource.gallery,
+      );
+
+      if (pickedFile != null) {
+        onImagesPicked([pickedFile]);
+      } else {
+        toastError(title: 'Empty', 'No image selected from gallery.');
+      }
+    } catch (e) {
+      toastError(title: 'Error', 'Failed to pick image from gallery: $e');
+    }
   }
 
   static void toastSuccess(String message, {String title = "Success"}) {

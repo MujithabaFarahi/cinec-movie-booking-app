@@ -13,6 +13,8 @@ class MovieState extends Equatable {
   final List<ShowtimeModel> showtimes;
   final ShowtimeModel? showtime;
   final double? defaultTicketPrice;
+  final List<BookingModel> bookings;
+  final BookingModel? booking;
 
   const MovieState({
     this.isLoading = false,
@@ -27,6 +29,8 @@ class MovieState extends Equatable {
     this.showtimes = const [],
     this.showtime,
     this.defaultTicketPrice = 400,
+    this.bookings = const [],
+    this.booking,
   });
 
   MovieState copyWith({
@@ -43,6 +47,8 @@ class MovieState extends Equatable {
     List<ShowtimeModel>? showtimes,
     ShowtimeModel? showtime,
     double? defaultTicketPrice,
+    List<BookingModel>? bookings,
+    BookingModel? booking,
   }) {
     return MovieState(
       isLoading: isLoading ?? this.isLoading,
@@ -57,6 +63,8 @@ class MovieState extends Equatable {
       showtimes: showtimes ?? this.showtimes,
       showtime: showtime ?? this.showtime,
       defaultTicketPrice: defaultTicketPrice ?? this.defaultTicketPrice,
+      bookings: bookings ?? this.bookings,
+      booking: booking ?? this.booking,
     );
   }
 
@@ -74,5 +82,7 @@ class MovieState extends Equatable {
     showtimes,
     showtime,
     defaultTicketPrice,
+    bookings,
+    booking,
   ];
 }

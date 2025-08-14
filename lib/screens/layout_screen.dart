@@ -46,7 +46,7 @@ class _LayoutScreenState extends State<LayoutScreen> {
         children: const [HomeScreen(), BookingsScreen(), ProfileScreen()],
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 4),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           elevation: 0,

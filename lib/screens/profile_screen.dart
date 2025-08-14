@@ -1,11 +1,13 @@
+import 'package:cinec_movies/blocs/movie/movie_bloc.dart';
+import 'package:cinec_movies/theme/app_colors.dart';
 import 'package:cinec_movies/utils/core_utils.dart';
 import 'package:cinec_movies/widgets/appbar.dart';
 import 'package:cinec_movies/widgets/custom_alert.dart';
+import 'package:cinec_movies/widgets/image_icon_builder.dart';
 import 'package:cinec_movies/widgets/primary_button.dart';
-import 'package:cinec_movies/widgets/select_card.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -13,7 +15,6 @@ class ProfileScreen extends StatelessWidget {
 
   Future<void> _logout(BuildContext context) async {
     final googleSignIn = GoogleSignIn.instance;
-
     try {
       await googleSignIn.signOut();
       await FirebaseAuth.instance.signOut();
@@ -28,120 +29,134 @@ class ProfileScreen extends StatelessWidget {
     }
   }
 
-  void addDummyMovies() async {
-    final firestore = FirebaseFirestore.instance;
-    final movies = [
-      {
-        "title": "Inception",
-        "genre": "Sci-Fi",
-        "duration": 148,
-        "synopsis":
-            "A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea.",
-        "posterUrl":
-            "https://firebasestorage.googleapis.com/v0/b/cinec-movie-booking.firebasestorage.app/o/MoviePosters%2Finception.jpg?alt=media&token=5547f6db-92f1-4428-9720-4712a75a9c0e",
-        "createdAt": DateTime.now().toIso8601String(),
-        "showtimes": [
-          {"date": "2025-08-12", "time": "18:00"},
-          {"date": "2025-08-12", "time": "21:00"},
-          {"date": "2025-08-13", "time": "15:00"},
-        ],
-      },
-      {
-        "title": "The Dark Knight",
-        "genre": "Action",
-        "duration": 152,
-        "synopsis":
-            "Batman faces the Joker, a criminal mastermind who wants to plunge Gotham into chaos.",
-        "posterUrl":
-            "https://firebasestorage.googleapis.com/v0/b/cinec-movie-booking.firebasestorage.app/o/MoviePosters%2Fthe%20dark%20knight.jpg?alt=media&token=55846c13-0736-45bb-8cc6-4cee3c213d40",
-        "createdAt": DateTime.now().toIso8601String(),
-        "showtimes": [
-          {"date": "2025-08-12", "time": "17:00"},
-          {"date": "2025-08-13", "time": "20:00"},
-        ],
-      },
-      {
-        "title": "Interstellar",
-        "genre": "Adventure",
-        "duration": 169,
-        "synopsis":
-            "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
-        "posterUrl":
-            "https://firebasestorage.googleapis.com/v0/b/cinec-movie-booking.firebasestorage.app/o/MoviePosters%2Finterstellar.jpg?alt=media&token=19e2fa33-f187-4775-857b-66793bdf1ed0",
-        "createdAt": DateTime.now().toIso8601String(),
-        "showtimes": [
-          {"date": "2025-08-14", "time": "14:00"},
-          {"date": "2025-08-14", "time": "19:00"},
-        ],
-      },
-    ];
-
-    for (var movie in movies) {
-      final movieData = Map<String, dynamic>.from(movie);
-      final showtimes = movieData.remove('showtimes') as List<dynamic>;
-
-      // Add movie doc without showtimes
-      final movieRef = await firestore.collection('movies').add(movieData);
-
-      // Add showtimes subcollection
-      for (var showtime in showtimes) {
-        await movieRef.collection('showtimes').add({
-          "date": showtime['date'],
-          "time": showtime['time'],
-          "bookedSeats": <String>[],
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'Profile'),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20),
-          child: Wrap(
-            runSpacing: 8,
-            children: [
-              SelectCard(
-                title: 'My Profile',
-                icon: 'assets/icons/user.png',
-                onTap: addDummyMovies,
-                isBordered: true,
-              ),
+      body: BlocBuilder<MovieBloc, MovieState>(
+        builder: (context, state) {
+          if (state.user == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-              PrimaryButton(
-                text: 'Settings',
-                onPressed: () {
-                  CoreUtils.showBottomSheet(
-                    Column(children: [Text('Settings Bottom Sheet')]),
-                  );
-                },
-              ),
+          final user = state.user!;
 
-              SelectCard(
-                title: 'Log Out',
-                icon: 'assets/icons/logout.png',
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return CustomAlert(
-                        iconPath: 'assets/icons/logout.png',
-                        title: 'Logout',
-                        message:
-                            'Are you sure you want to Logout of your account?',
-                        onConfirm: () => _logout(context),
-                      );
-                    },
-                  );
-                },
-                isBordered: true,
-              ),
-            ],
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // // Profile picture
+                CircleAvatar(
+                  radius: 50,
+
+                  // backgroundColor: Colors.grey.shade300,
+                  child: ImageIconBuilder(
+                    image: 'assets/icons/user.png',
+                    iconColor: AppColors.gray900,
+                    width: 50,
+                    height: 50,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Name
+                Text(
+                  user.name,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                // Email
+                Text(
+                  user.email,
+                  style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                ),
+                const SizedBox(height: 20),
+
+                // Details card
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        _buildDetailRow(
+                          'Phone',
+                          user.phone.isEmpty ? 'N/A' : user.phone,
+                        ),
+                        _buildDetailRow(
+                          'Role',
+                          state.isAdmin ? 'Admin' : 'User',
+                        ),
+                        _buildDetailRow(
+                          'Joined',
+                          CoreUtils.formatDate(user.createdAt),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+
+                // Edit profile button
+                PrimaryButton(
+                  text: 'Edit Profile',
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      '/edit-profile',
+                      arguments: {'user': state.user},
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
+
+                // Logout button
+                PrimaryButton(
+                  text: 'Logout',
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CustomAlert(
+                          iconPath: 'assets/icons/logout.png',
+                          title: 'Logout',
+                          message:
+                              'Are you sure you want to logout of your account?',
+                          onConfirm: () => _logout(context),
+                        );
+                      },
+                    );
+                  },
+                  backgroundColor: Colors.red,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
           ),
-        ),
+          Text(value),
+        ],
       ),
     );
   }

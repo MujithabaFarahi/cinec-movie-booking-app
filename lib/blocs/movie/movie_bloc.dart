@@ -1,3 +1,4 @@
+import 'package:cinec_movies/Models/booking_model.dart';
 import 'package:cinec_movies/Models/movie_model.dart';
 import 'package:cinec_movies/Models/showtime_model.dart';
 import 'package:cinec_movies/Models/user_model.dart';
@@ -18,6 +19,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     on<UpdateMovieStatusById>(_onUpdateMovieStatusById);
     on<GetShowtimesByMovieId>(_onGetShowtimesByMovieId);
     on<GetShowTimeById>(_onGetShowTimeById);
+    on<GetAllBookings>(_onGetAllBookings);
   }
 
   Future<void> _onGetUserById(
@@ -81,9 +83,14 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     emit(state.copyWith(isLoading: true, movie: null));
 
     try {
-      final movie = state.movies.firstWhere((m) => m.id == event.id);
+      final query = databaseMethods.getMovieById(event.id);
 
-      emit(state.copyWith(isLoading: false, movie: movie));
+      await for (final documentSnapshot in query) {
+        final data = documentSnapshot.data();
+        final movie = MovieModel.fromFirestore(data!, documentSnapshot.id);
+
+        emit(state.copyWith(isLoading: false, movie: movie));
+      }
     } catch (e) {
       emit(
         state.copyWith(isLoading: false, isError: true, message: e.toString()),
@@ -140,9 +147,47 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     emit(state.copyWith(isLoading: true, showtime: null));
 
     try {
-      final showtime = state.showtimes.firstWhere((s) => s.id == event.id);
+      final query = databaseMethods.getShowtimeByMovieAndId(
+        event.movieId,
+        event.id,
+      );
 
-      emit(state.copyWith(isLoading: false, showtime: showtime));
+      await for (final documentSnapshot in query) {
+        final data = documentSnapshot.data();
+        final showTime = ShowtimeModel.fromFirestore(
+          data!,
+          documentSnapshot.id,
+        );
+
+        emit(state.copyWith(isLoading: false, showtime: showTime));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(isLoading: false, isError: true, message: e.toString()),
+      );
+    }
+  }
+
+  Future<void> _onGetAllBookings(
+    GetAllBookings event,
+    Emitter<MovieState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      final query = databaseMethods.getAllBookings(
+        isAdmin: state.isAdmin,
+        userId: state.user?.id ?? '',
+      );
+
+      await for (final querySnapshot in query) {
+        final bookings = querySnapshot.docs.map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          return BookingModel.fromFirestore(data, doc.id);
+        }).toList();
+
+        emit(state.copyWith(isLoading: false, bookings: bookings));
+      }
     } catch (e) {
       emit(
         state.copyWith(isLoading: false, isError: true, message: e.toString()),

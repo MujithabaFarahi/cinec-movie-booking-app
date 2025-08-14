@@ -51,9 +51,17 @@ final class GetShowtimesByMovieId extends MovieEvent {
 
 final class GetShowTimeById extends MovieEvent {
   final String id;
+  final String movieId;
 
-  const GetShowTimeById(this.id);
+  const GetShowTimeById({required this.id, required this.movieId});
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [id, movieId];
+}
+
+final class GetAllBookings extends MovieEvent {
+  const GetAllBookings();
+
+  @override
+  List<Object?> get props => [];
 }

@@ -17,6 +17,7 @@ class PrimaryTextfield extends StatefulWidget {
   final String fontFamily;
   final String? svgIconPath;
   final bool obscureText;
+  final bool readOnly;
   final VoidCallback? onIconPressed;
   final TextInputType? keyboardType;
   final void Function(String)? onChanged;
@@ -41,6 +42,7 @@ class PrimaryTextfield extends StatefulWidget {
     this.svgIconPath,
     this.onIconPressed,
     this.obscureText = false,
+    this.readOnly = false,
     this.keyboardType,
     this.onChanged,
     this.validator,
@@ -88,6 +90,7 @@ class _PrimaryTextfieldState extends State<PrimaryTextfield> {
         validator: widget.validator,
         cursorColor: AppColors.primary,
         textInputAction: widget.textInputAction,
+        readOnly: widget.readOnly,
         decoration: InputDecoration(
           filled: true,
           fillColor: widget.backgroundColor,
