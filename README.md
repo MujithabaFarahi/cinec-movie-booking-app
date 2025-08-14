@@ -35,38 +35,41 @@ Built with:
 
 ## 🗄 Firestore Structure
 
-users (collection)
-└── userId (document)
-├── name: String
-├── email: String
-├── role: String (user/admin)
-├── createdAt: Timestamp
-├── lastLogin: Timestamp
-└── other profile fields...
+### users (collection)
 
-movies (collection)
-└── movieId (document)
-├── title: String
-├── genre: String
-├── duration: int (minutes)
-├── synopsis: String
-├── posterUrl: String
-├── nowShowing: bool
-├── hidden: bool
-└── showtimes (subcollection)
-└── showtimeId (document)
-├── dateTime: Timestamp
-├── ticketPrice: double
-└── bookedSeats: Array<String>
+- **userId (document)**
+  - name: String
+  - email: String
+  - role: String (user/admin)
+  - createdAt: Timestamp
+  - lastLogin: Timestamp
+  - other profile fields...
 
-bookings (collection)
-└── bookingId (document)
-├── movieId: String
-├── movieTitle: String
-├── showtimeId: String
-├── userId: String
-├── seats: Array<String>
-└── bookingDate: Timestamp
+### movies (collection)
+
+- **movieId (document)**
+  - title: String
+  - genre: String
+  - duration: int (minutes)
+  - synopsis: String
+  - posterUrl: String
+  - nowShowing: bool
+  - hidden: bool
+  - **showtimes (subcollection)**
+    - **showtimeId (document)**
+      - dateTime: Timestamp
+      - ticketPrice: double
+      - bookedSeats: Array<String>
+
+### bookings (collection)
+
+- **bookingId (document)**
+  - movieId: String
+  - movieTitle: String
+  - showtimeId: String
+  - userId: String
+  - seats: Array<String>
+  - bookingDate: Timestamp
 
 ## 🏗 Architecture & Workflow Diagram
 
@@ -80,36 +83,36 @@ Copy code
 
 ## 🏗 Architecture & Workflow Diagram
 
-The Cinec Movies App follows a client-server architecture using Flutter for the frontend and Firebase for the backend. Below is an overview of the architecture and workflow:
+The Cinec Movies App follows a client-server architecture using Flutter for the frontend and Firebase for the backend.
 
-+-------------------+ +--------------------+
-| | | |
-| Flutter Client | <--> | Firebase Auth |
-| | | Firestore DB |
-+-------------------+ +--------------------+
-| |
-| |
-v v
-+-------------------+ +--------------------+
-| | | |
-| User Actions | | Admin Actions |
-| - Login/Register | | - Add/Edit Movies |
-| - Browse Movies | | - Hide/Unhide |
-| - Select Showtimes| | - Add Showtimes |
-| - Select Seats | | - View All Bookings|
-| - Confirm Booking | | |
-+-------------------+ +--------------------+
-| |
-+-----------+---------------+
-|
-v
-+-------------------+
-| Firestore DB |
-| - users |
-| - movies |
-| - showtimes |
-| - bookings |
-+-------------------+
+      +-------------------+       +--------------------+
+      |                   |       |                    |
+      |   Flutter Client  | <-->  |   Firebase Auth    |
+      |                   |       |   Firestore DB     |
+      +-------------------+       +--------------------+
+                |                           |
+                |                           |
+                v                           v
+      +-------------------+       +--------------------+
+      |                   |       |                    |
+      |   User Actions    |       |   Admin Actions    |
+      | - Login/Register  |       | - Add/Edit Movies  |
+      | - Browse Movies   |       | - Hide/Unhide      |
+      | - Select Showtimes|       | - Add Showtimes    |
+      | - Select Seats    |       | - View All Bookings|
+      | - Confirm Booking |       |                    |
+      +-------------------+       +--------------------+
+                |                           |
+                +-----------+---------------+
+                            |
+                            v
+                   +-------------------+
+                   |   Firestore DB    |
+                   | - users           |
+                   | - movies          |
+                   |   - showtimes     |
+                   | - bookings        |
+                   +-------------------+
 
 **Workflow:**
 
