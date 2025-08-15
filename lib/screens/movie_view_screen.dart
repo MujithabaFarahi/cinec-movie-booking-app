@@ -155,9 +155,15 @@ class _MovieViewScreenState extends State<MovieViewScreen> {
                       );
                     }).toList(),
                   );
-                } else if (state.isError && !state.isLoading) {
+                }
+
+                if (state.isError &&
+                    !state.isLoading &&
+                    state.showtimes.isEmpty) {
                   return Text('Error loading showtimes: ${state.message}');
-                } else if (state.showtimes.isEmpty) {
+                }
+
+                if (state.showtimes.isEmpty) {
                   return Center(
                     child: Column(
                       children: [

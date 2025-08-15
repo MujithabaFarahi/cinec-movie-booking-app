@@ -111,16 +111,42 @@ class _AddShowtimeScreenState extends State<AddShowtimeScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            ListTile(
-              title: Text(DateFormat('yyyy-MM-dd').format(selectedDate)),
-              trailing: const Icon(Icons.calendar_today),
+            InkWell(
+              borderRadius: BorderRadius.circular(8),
               onTap: _pickDate,
+              child: Container(
+                height: 48,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      DateFormat('yyyy-MM-dd').format(selectedDate),
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const Icon(Icons.calendar_today),
+                  ],
+                ),
+              ),
             ),
-            ListTile(
-              title: Text(selectedTime.format(context)),
-              trailing: const Icon(Icons.access_time),
+            const SizedBox(height: 4),
+
+            InkWell(
+              borderRadius: BorderRadius.circular(8),
               onTap: _pickTime,
+              child: Container(
+                height: 48,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(selectedTime.format(context)),
+                    const Icon(Icons.access_time),
+                  ],
+                ),
+              ),
             ),
+
             const SizedBox(height: 12),
             PrimaryTextfield(
               controller: priceController,

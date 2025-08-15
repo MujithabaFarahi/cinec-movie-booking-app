@@ -165,7 +165,7 @@ class _AddMovieScreenState extends State<AddMovieScreen> {
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: AppColors.primary,
-                              width: 2,
+                              width: 1.5,
                             ),
                           ),
                           // alignment: Alignment.center,

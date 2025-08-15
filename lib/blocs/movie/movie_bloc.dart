@@ -33,19 +33,19 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     try {
       final query = databaseMethods.getUserById(event.id);
 
-      bool isAdmin = false;
-
       await for (final documentSnapshot in query) {
         final data = documentSnapshot.data();
         final user = UserModel.fromFirestore(data!, documentSnapshot.id);
 
-        if (user.email == 'admin@gmail.com') {
-          isAdmin = true;
-        }
+        add(GetAllMovies(isAdmin: user.role == 'Admin'));
 
-        add(GetAllMovies(isAdmin: isAdmin));
-
-        emit(state.copyWith(isLoading: false, user: user, isAdmin: isAdmin));
+        emit(
+          state.copyWith(
+            isLoading: false,
+            user: user,
+            isAdmin: user.role == 'Admin',
+          ),
+        );
       }
     } catch (e) {
       emit(
@@ -110,9 +110,8 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
 
     try {
       await databaseMethods.updateMovieStatusById(event.id, event.nowShowing);
-      final movie = state.movies.firstWhere((m) => m.id == event.id);
 
-      emit(state.copyWith(isLoading2: false, movie: movie));
+      emit(state.copyWith(isLoading2: false));
     } catch (e) {
       emit(
         state.copyWith(isLoading2: false, isError: true, message: e.toString()),

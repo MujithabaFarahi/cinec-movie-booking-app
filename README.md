@@ -136,7 +136,7 @@ The Cinec Movies App follows a client-server architecture using Flutter for the 
 
 ### 1️⃣ Download APK
 
-- Get the APK file from the provided link: [Download Cinec Movies APK](https://drive.google.com/file/d/1P_UnfLt6tL5ngIo2E3UClTmylji6sHHt/view?usp=drive_link)
+- Get the APK file from the provided link: [Download Cinec Movies APK](https://drive.google.com/file/d/1eok83oRgltFDmbv5kj5cmALkK4ytGrWU/view?usp=drive_link)
 - Transfer it to your Android device (if downloaded on PC).
 - Open the APK file and allow installation from unknown sources if prompted.
 

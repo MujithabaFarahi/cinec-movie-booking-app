@@ -59,22 +59,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return Stack(
             children: [
               // Background header gradient
-              Container(
-                height: 250,
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [AppColors.blue500, AppColors.alizarin500],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-              ),
+              Container(height: 200, color: AppColors.primary),
 
               // Profile Content
               SingleChildScrollView(
                 child: Column(
                   children: [
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 145),
 
                     // Profile Picture
                     CircleAvatar(
@@ -93,16 +84,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.white,
                       ),
                     ),
-                    Text(
-                      user.email,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: AppColors.peach100,
-                      ),
-                    ),
+                    Text(user.email, style: const TextStyle(fontSize: 16)),
                     const SizedBox(height: 20),
 
                     // Info Card
@@ -148,6 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         children: [
                           PrimaryButton(
                             text: 'Edit Profile',
+                            svgIconPath: 'assets/icons/edit.svg',
                             onPressed: () {
                               Navigator.pushNamed(
                                 context,
@@ -159,9 +144,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizedBox(height: 16),
                           PrimaryButton(
                             text: 'Logout',
-                            // icon: 'assets/icons/logout.png',
                             svgIconPath: 'assets/icons/logout.svg',
-                            backgroundColor: AppColors.alizarin500,
+                            backgroundColor: AppColors.blue500,
                             onPressed: () {
                               showDialog(
                                 context: context,

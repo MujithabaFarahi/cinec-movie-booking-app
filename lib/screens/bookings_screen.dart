@@ -23,50 +23,52 @@ class _BookingsScreenState extends State<BookingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'My Bookings'),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: BlocBuilder<MovieBloc, MovieState>(
-          builder: (context, state) {
-            if (state.isLoading) {
-              return ListView.separated(
-                itemCount: 4,
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final booking = BookingModel(
-                    id: 'id',
-                    movieId: 'movieId',
-                    userId: 'userId',
-                    showTimeId: 'showTimeId',
-                    movieTitle: 'movieTitle',
-                    posterUrl: 'posterUrl',
-                    showDateTime: DateTime.now(),
-                    seats: ['A1', 'A2'],
-                    bookedAt: DateTime.now(),
-                  );
-                  return BookingCard(booking: booking, isLoading: true);
-                },
-              );
-            }
-
-            if (state.bookings.isEmpty) {
-              return const Center(
-                child: Text(
-                  'No bookings yet',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                ),
-              );
-            }
-
+      body: BlocBuilder<MovieBloc, MovieState>(
+        builder: (context, state) {
+          if (state.isLoading && state.bookings.isEmpty) {
             return ListView.separated(
-              itemCount: state.bookings.length,
+              itemCount: 4,
               separatorBuilder: (_, __) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
-                final booking = state.bookings[index];
-                return BookingCard(booking: booking);
+                final booking = BookingModel(
+                  id: 'id',
+                  movieId: 'movieId',
+                  userId: 'userId',
+                  showTimeId: 'showTimeId',
+                  movieTitle: 'movieTitle',
+                  posterUrl: 'posterUrl',
+                  showDateTime: DateTime.now(),
+                  seats: ['A1', 'A2'],
+                  bookedAt: DateTime.now(),
+                );
+                return BookingCard(booking: booking, isLoading: true);
               },
             );
-          },
-        ),
+          }
+
+          if (state.bookings.isEmpty && !state.isLoading) {
+            return const Center(
+              child: Text(
+                'No bookings yet',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            );
+          }
+
+          if (state.isError && !state.isLoading && state.bookings.isEmpty) {
+            return Center(child: Text('Error: ${state.message}'));
+          }
+
+          return ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            itemCount: state.bookings.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 8),
+            itemBuilder: (context, index) {
+              final booking = state.bookings[index];
+              return BookingCard(booking: booking);
+            },
+          );
+        },
       ),
     );
   }

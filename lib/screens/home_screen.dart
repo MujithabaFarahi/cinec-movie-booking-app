@@ -21,8 +21,18 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
 
     final movieBloc = BlocProvider.of<MovieBloc>(context);
-
     movieBloc.add(GetAllMovies());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).unfocus();
+    });
+  }
+
+  @override
+  void deactivate() {
+    // Remove focus when leaving the screen
+    FocusScope.of(context).unfocus();
+    super.deactivate();
   }
 
   @override
@@ -41,12 +51,16 @@ class _HomeScreenState extends State<HomeScreen> {
               svgIconPath: 'assets/icons/search.svg',
             ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 8),
           Expanded(
             child: BlocBuilder<MovieBloc, MovieState>(
               builder: (context, state) {
                 if (state.isLoading && state.movies.isEmpty) {
                   return GridView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 16,
+                    ),
                     itemCount: 6,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: (context.screenWidth / 150).floor(),
@@ -68,49 +82,51 @@ class _HomeScreenState extends State<HomeScreen> {
                       return MovieCard(
                         isLoading: true,
                         movie: movie,
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/movie',
-                            arguments: {'movie': movie},
-                          );
-                        },
-                      );
-                    },
-                  );
-                } else if (state.isError && !state.isLoading) {
-                  return Center(child: Text('Error: ${state.message}'));
-                } else if (state.movies.isEmpty && !state.isLoading) {
-                  return const Center(
-                    child: Text('No movies currently showing.'),
-                  );
-                } else {
-                  final movies = state.movies;
-
-                  return GridView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: movies.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: (context.screenWidth / 150).floor(),
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 8,
-                      childAspectRatio: 0.65,
-                    ),
-                    itemBuilder: (context, index) {
-                      final movie = movies[index];
-                      return MovieCard(
-                        movie: movie,
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/movie',
-                            arguments: {'movie': movie},
-                          );
-                        },
+                        onTap: () {},
                       );
                     },
                   );
                 }
+
+                if (state.movies.isEmpty && !state.isLoading) {
+                  return const Center(
+                    child: Text('No movies currently showing.'),
+                  );
+                }
+
+                if (state.isError && !state.isLoading && state.movies.isEmpty) {
+                  return Center(child: Text('Error: ${state.message}'));
+                }
+
+                final movies = state.movies;
+
+                return GridView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 16,
+                  ),
+                  itemCount: movies.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: (context.screenWidth / 150).floor(),
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 0.65,
+                  ),
+                  itemBuilder: (context, index) {
+                    final movie = movies[index];
+                    return MovieCard(
+                      movie: movie,
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                        Navigator.pushNamed(
+                          context,
+                          '/movie',
+                          arguments: {'movie': movie},
+                        );
+                      },
+                    );
+                  },
+                );
               },
             ),
           ),
@@ -122,6 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return FloatingActionButton(
               backgroundColor: AppColors.primary,
               onPressed: () {
+                FocusScope.of(context).unfocus();
                 Navigator.pushNamed(context, '/add-movie');
               },
               child: const Icon(Icons.add, color: AppColors.white),

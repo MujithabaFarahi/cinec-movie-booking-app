@@ -3,6 +3,7 @@ class UserModel {
   final String name;
   final String email;
   final String phone;
+  final String role;
   final DateTime createdAt;
   final DateTime lastLogin;
 
@@ -11,6 +12,7 @@ class UserModel {
     required this.name,
     required this.email,
     required this.phone,
+    required this.role,
     required this.createdAt,
     required this.lastLogin,
   });
@@ -22,6 +24,7 @@ class UserModel {
       name: data['name'] ?? '',
       email: data['email'] ?? '',
       phone: data['phone'] ?? '',
+      role: data['role'] ?? 'User',
       createdAt: DateTime.parse(
         data['createdAt'] ?? DateTime.now().toIso8601String(),
       ),
@@ -38,6 +41,7 @@ class UserModel {
       name: map['name'] ?? '',
       email: map['email'] ?? '',
       phone: map['phone'] ?? '',
+      role: map['role'] ?? '',
       createdAt: DateTime.parse(
         map['createdAt'] ?? DateTime.now().toIso8601String(),
       ),
@@ -54,6 +58,7 @@ class UserModel {
       'name': name,
       'email': email,
       'phone': phone,
+      'role': role,
       'createdAt': createdAt.toIso8601String(),
       'lastLogin': lastLogin.toIso8601String(),
     };
@@ -65,6 +70,7 @@ class UserModel {
     String? name,
     String? email,
     String? phone,
+    String? role,
     double? itemsProcessed,
     int? orderCount,
     DateTime? createdAt,
@@ -75,6 +81,7 @@ class UserModel {
       name: name ?? this.name,
       email: email ?? this.email,
       phone: phone ?? this.phone,
+      role: role ?? this.role,
       createdAt: createdAt ?? this.createdAt,
       lastLogin: lastLogin ?? this.lastLogin,
     );

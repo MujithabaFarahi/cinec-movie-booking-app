@@ -2,7 +2,7 @@ class MovieModel {
   final String id;
   final String title;
   final String genre;
-  final int duration; // in minutes
+  final int duration;
   final String synopsis;
   final String posterUrl;
   final DateTime createdAt;

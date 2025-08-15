@@ -1,29 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseMethods {
-  Future addItem(Map<String, dynamic> itemInfoMap, String id) async {
-    return await FirebaseFirestore.instance
-        .collection("Bags")
-        .doc(id)
-        .set(itemInfoMap);
-  }
-
-  Future<bool> isNameUnique(String name) async {
-    final querySnapshot = await FirebaseFirestore.instance
-        .collection("Bags")
-        .where("name", isEqualTo: name)
-        .get();
-
-    return querySnapshot.docs.isEmpty;
-  }
-
   Stream<QuerySnapshot> getAllMovies({required bool isAdmin}) {
     final collection = FirebaseFirestore.instance.collection("movies");
 
     if (isAdmin) {
-      return collection.snapshots();
+      return collection.orderBy('createdAt', descending: true).snapshots();
     } else {
-      return collection.where('nowShowing', isEqualTo: true).snapshots();
+      return collection
+          .where('nowShowing', isEqualTo: true)
+          .orderBy('createdAt', descending: true)
+          .snapshots();
     }
   }
 
@@ -61,13 +48,6 @@ class DatabaseMethods {
     );
   }
 
-  Future updateItem(Map<String, dynamic> updatedData, String id) async {
-    return await FirebaseFirestore.instance
-        .collection("Bags")
-        .doc(id)
-        .update(updatedData);
-  }
-
   Stream<DocumentSnapshot<Map<String, dynamic>>> getUserById(String id) {
     return FirebaseFirestore.instance.collection("users").doc(id).snapshots();
   }
@@ -79,9 +59,12 @@ class DatabaseMethods {
     final collection = FirebaseFirestore.instance.collection("bookings");
 
     if (isAdmin) {
-      return collection.snapshots();
+      return collection.orderBy('bookedAt', descending: true).snapshots();
     } else {
-      return collection.where('userId', isEqualTo: userId).snapshots();
+      return collection
+          .where('userId', isEqualTo: userId)
+          .orderBy('bookedAt', descending: true)
+          .snapshots();
     }
   }
 }
